@@ -4,20 +4,24 @@ import data from './data/data'
 function App() {
   const [post, setPost] = useState(data)
   const [newPost, setNewPost] = useState('')
+  //per aggiungere più campi inserire un nuovo state
 
   const sendPost = event => {
     event.preventDefault()
-    console.log(newPost);
-
+    //aggiungere il nuovo parametro ad un campo dentro l'oggetto sottostante
     setPost([...post, { id: Date.now(), title: newPost }])
-    console.log(post);
     setNewPost('')
+  }
+
+  const deletePost = (postId) => {
+    setPost(post.filter(post => post.id !== postId))
   }
 
   return (
     <>
       <div>
         <form onSubmit={sendPost}>
+          {/* creare un componente per l'input (don't repete your self) */}
           <label htmlFor="desc">Post content</label>
           <input
             type="text"
@@ -30,10 +34,13 @@ function App() {
           />
           <button type='submit'>submit</button>
         </form>
-        {/* <p>{post}</p> */}
       </div>
-      {post.map(curPost => <div key={curPost.id}>{curPost.title}</div>
-      )}
+      {(post.length !== 0) ? post.map(curPost => <div key={curPost.id}>
+        {curPost.title}
+        <button onClick={() => deletePost(curPost.id)}>delete</button>
+      </div >
+      ) : <p>Senza nulla</p>}
+
     </>
   )
 }
